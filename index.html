@@ -1,45 +1,913 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UCP Ethical Simulation</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparative Analysis of Ethical Frameworks</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --virtue: #9b59b6;
+            --consequential: #3498db;
+            --deontological: #e74c3c;
+            --care: #f39c12;
+            --contract: #16a085;
+            --coherence: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--light);
+            padding: 20px;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .nav-btn:hover, .nav-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:focus {
+            outline: 3px solid #ffd700;
+            outline-offset: 2px;
+        }
+
+        .nav-btn[data-view="overview"] { background: var(--primary); }
+        .nav-btn[data-view="virtue"] { background: var(--virtue); }
+        .nav-btn[data-view="consequential"] { background: var(--consequential); }
+        .nav-btn[data-view="deontological"] { background: var(--deontological); }
+        .nav-btn[data-view="care"] { background: var(--care); }
+        .nav-btn[data-view="contract"] { background: var(--contract); }
+        .nav-btn[data-view="coherence"] { background: var(--coherence); }
+        .nav-btn[data-view="comparison"] { background: var(--accent); }
+        .nav-btn[data-view="ranking"] { background: var(--warning); }
+
+        .nav-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .search-box {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .search-box input {
+            padding: 10px 15px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .framework-card {
+            background: var(--light);
+            border-left: 6px solid;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .framework-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .framework-card.virtue { border-left-color: var(--virtue); }
+        .framework-card.consequential { border-left-color: var(--consequential); }
+        .framework-card.deontological { border-left-color: var(--deontological); }
+        .framework-card.care { border-left-color: var(--care); }
+        .framework-card.contract { border-left-color: var(--contract); }
+        .framework-card.coherence { border-left-color: var(--coherence); }
+
+        .framework-card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .framework-section {
+            margin: 20px 0;
+        }
+
+        .framework-section h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .framework-section h3::before {
+            content: "→";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .framework-section p {
+            margin-left: 30px;
+            line-height: 1.8;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 0.95em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .comparison-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .comparison-table .framework-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .ranking-container {
+            margin: 30px 0;
+        }
+
+        .ranking-item {
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .ranking-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .ranking-item::before {
+            content: attr(data-rank);
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .ranking-item.rank-1 { border-color: #27ae60; background: #e8f8f5; }
+        .ranking-item.rank-2 { border-color: #f39c12; background: #fef5e7; }
+        .ranking-item.rank-3 { border-color: #16a085; background: #e8f6f3; }
+        .ranking-item.rank-4 { border-color: #9b59b6; background: #f4ecf7; }
+        .ranking-item.rank-5 { border-color: #3498db; background: #ebf5fb; }
+        .ranking-item.rank-6 { border-color: #e74c3c; background: #fadbd8; }
+
+        .ranking-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .ranking-item p {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.minimal { background: #d5f4e6; color: #27ae60; }
+        .badge.light { background: #fff3cd; color: #f39c12; }
+        .badge.moderate { background: #d6eaf8; color: #3498db; }
+        .badge.strong { background: #e8daef; color: #9b59b6; }
+        .badge.high { background: #fadbd8; color: #e74c3c; }
+        .badge.demanding { background: #f5b7b1; color: #c0392b; }
+
+        .citation {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9em;
+            border-radius: 8px;
+        }
+
+        .citation a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .citation a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .alert {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .alert h3 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            nav, .search-box {
+                display: none;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            .nav-buttons {
+                flex-direction: column;
+            }
+            .nav-btn {
+                width: 100%;
+            }
+            .content {
+                padding: 20px;
+            }
+            .comparison-table {
+                font-size: 0.8em;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px;
+            }
+        }
+
+        /* Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        [role="region"]:focus {
+            outline: 3px solid var(--secondary);
+            outline-offset: 4px;
+        }
+    </style>
 </head>
 <body>
-  <h1>UCP v2.0 Ethical Simulation</h1>
-  <section>
-    <label for="roleSelect">Role:</label>
-    <select id="roleSelect">
-      <option value="Instructor">Instructor</option>
-      <option value="Researcher">Researcher</option>
-      <option value="Practitioner">Practitioner</option>
-    </select>
-    <button id="loadPresetBtn">Load Preset</button>
-  </section>
-  <section>
-    <label for="moduleSelect">Select Module:</label>
-    <select id="moduleSelect">
-      <option value="Ethical Dilemma: Trolley Problem">Trolley Problem</option>
-      <option value="Whistleblower Simulation">Whistleblower</option>
-      <option value="Paradigm Shift and PRF Drift">PRF Shift</option>
-    </select>
-    <p id="moduleDescription"></p>
-  </section>
-  <section>
-    <h2>Agent Setup</h2>
-    <textarea id="agentInput" rows="8" cols="60">
-[
-  {"name": "Ada", "identity_kernel": "integrity", "ita_role": "engineer", "prf": "consequentialist"},
-  {"name": "Turing", "identity_kernel": "logic", "ita_role": "scientist", "prf": "deontologist"}
-]
-    </textarea><br>
-    <button id="simulateBtn">Run Simulation</button>
-  </section>
-  <section>
-    <h2>Simulation Results</h2>
-    <pre id="output"></pre>
-  </section>
-  <script src="/static/app.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="container">
+        <header role="banner">
+            <h1>Comparative Analysis of Ethical Frameworks</h1>
+            <p>An Interactive Exploration of Six Major Ethical Theories</p>
+        </header>
+
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-buttons" role="group" aria-label="Framework views">
+                <button class="nav-btn active" data-view="overview" aria-pressed="true">Overview</button>
+                <button class="nav-btn" data-view="virtue" aria-pressed="false">Virtue Ethics</button>
+                <button class="nav-btn" data-view="consequential" aria-pressed="false">Consequentialism</button>
+                <button class="nav-btn" data-view="deontological" aria-pressed="false">Deontological</button>
+                <button class="nav-btn" data-view="care" aria-pressed="false">Care Ethics</button>
+                <button class="nav-btn" data-view="contract" aria-pressed="false">Social Contract</button>
+                <button class="nav-btn" data-view="coherence" aria-pressed="false">Coherence Ethics</button>
+                <button class="nav-btn" data-view="comparison" aria-pressed="false">Comparison Table</button>
+                <button class="nav-btn" data-view="ranking" aria-pressed="false">Assumption Ranking</button>
+            </div>
+            <div class="search-box">
+                <input type="search" 
+                       id="searchInput" 
+                       placeholder="Search frameworks..." 
+                       aria-label="Search ethical frameworks">
+                <button onclick="performSearch()" aria-label="Execute search">Search</button>
+            </div>
+        </nav>
+
+        <main id="main-content" class="content" role="main">
+            
+            <!-- OVERVIEW VIEW -->
+            <div class="view active" id="overview" role="region" aria-labelledby="overview-title">
+                <h2 id="overview-title">Overview: Six Ethical Frameworks</h2>
+                
+                <div class="alert">
+                    <h3>About This Analysis</h3>
+                    <p>This comparative analysis examines six major ethical frameworks through three critical lenses: <strong>Agency</strong> (how they view moral agents), <strong>Epistemology</strong> (how moral knowledge is acquired), and <strong>Ontology</strong> (what they assume about moral reality).</p>
+                </div>
+
+                <div class="framework-card virtue">
+                    <h2>🏛️ Virtue Ethics</h2>
+                    <p><strong>Core Idea:</strong> Ethics centers on character and virtues (courage, compassion, wisdom). Focus on "How should I live?" rather than rule-following.</p>
+                    <p><span class="badge strong">Strong Commitments</span> - Assumes objective human flourishing (eudaimonia)</p>
+                </div>
+
+                <div class="framework-card consequential">
+                    <h2>⚖️ Consequentialism</h2>
+                    <p><strong>Core Idea:</strong> Right actions maximize overall good (e.g., happiness, well-being). The ends justify the means.</p>
+                    <p><span class="badge high">High Commitments</span> - Requires measurable utility and outcome prediction</p>
+                </div>
+
+                <div class="framework-card deontological">
+                    <h2>📜 Deontological Ethics</h2>
+                    <p><strong>Core Idea:</strong> Morality based on duty and universal rules (like Kant's Categorical Imperative). Some acts are inherently right or wrong.</p>
+                    <p><span class="badge demanding">Most Demanding</span> - Assumes a priori moral laws binding all rational beings</p>
+                </div>
+
+                <div class="framework-card care">
+                    <h2>🤝 Care Ethics</h2>
+                    <p><strong>Core Idea:</strong> Morality grounded in relationships, empathy, and caring for dependents. Context and connection matter more than abstract rules.</p>
+                    <p><span class="badge light">Light Commitments</span> - Focuses on concrete relationships over metaphysics</p>
+                </div>
+
+                <div class="framework-card contract">
+                    <h2>🤜🤛 Social Contract Theory</h2>
+                    <p><strong>Core Idea:</strong> Morality derives from rational agreement among free individuals. Justice is what fair bargainers would accept.</p>
+                    <p><span class="badge moderate">Moderate Commitments</span> - Assumes rational agents and fair bargaining conditions</p>
+                </div>
+
+                <div class="framework-card coherence">
+                    <h2>🌐 Coherence-Based Thermodynamic Ethics</h2>
+                    <p><strong>Core Idea:</strong> Moral agency requires maintaining low-entropy coherence (stable identity, predictable institutions, coherent narratives). Ontology-neutral and pluralistic.</p>
+                    <p><span class="badge minimal">Minimal Commitments</span> - No shared metaphysics required; functional coordination only</p>
+                </div>
+            </div>
+
+            <!-- VIRTUE ETHICS VIEW -->
+            <div class="view" id="virtue" role="region" aria-labelledby="virtue-title">
+                <div class="framework-card virtue">
+                    <h2 id="virtue-title">🏛️ Virtue Ethics</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Virtue ethics views human beings as <strong>rational animals</strong> (Aristotle's term) whose moral life centers on character and practical wisdom. Agents are assumed to have innate tendencies and emotions that, when properly nurtured, yield stable virtues. Virtues integrate reason and feeling – e.g., courage or compassion are dispositions shaped by both intellect and motivation. A virtuous agent deliberates in light of <em>phronesis</em> (practical wisdom), aiming to flourish.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Moral knowledge comes from <strong>habituation, exemplars, and moral perception</strong>. Virtue ethicists emphasize learning from role models and experience. "Moral education and development is a major part of virtue ethics," relying on emulation and practice. In other words, one knows how to act by cultivating virtuous habits and seeing how a good person behaves. Abstract principles play a secondary role: virtue ethics asks "How should I live?" rather than applying universal rules.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p>Virtue ethics typically assumes a <strong>teleological human nature</strong> – that there is an objective human good (<em>eudaimonia</em> or flourishing) grounded in our function. For Aristotle, our distinctive function is reasoning well, so the good life is one of rational activity. Thus values like human flourishing or excellence are treated realistically as intrinsic ends. The self is understood as a developing character, and objective human goods exist even if realized in particular ways by different people.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Source:</strong> <a href="https://iep.utm.edu/virtue/" target="_blank" rel="noopener">Virtue Ethics | Internet Encyclopedia of Philosophy</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONSEQUENTIALISM VIEW -->
+            <div class="view" id="consequential" role="region" aria-labelledby="consequential-title">
+                <div class="framework-card consequential">
+                    <h2 id="consequential-title">⚖️ Consequentialism</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Consequentialist theories (e.g., utilitarianism) assume agents are <strong>rational maximizers of aggregate good</strong>. They presuppose that individuals can impartially weigh outcomes and act to maximize overall value. Emotions or particular attachments are usually downplayed; the focus is on agents' capacity to evaluate consequences. The typical utilitarian assumes agents can predict and compare the effects of actions: "moral agents are sufficiently rational to accurately predict the consequences of their actions."</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Moral knowledge in consequentialism is formed by <strong>forecasting outcomes and calculating net good</strong>. The theory relies on an act-calculus: one must know or estimate the pleasures, pains, costs, and benefits caused by each action and aggregate them. In practice this epistemology can be demanding: it assumes we can identify and measure all relevant consequences (often a very complex inference). Thus, moral reasoning is often treated as a kind of utility calculation.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p>Consequentialism generally entails a <strong>realist value ontology</strong>: it posits one or more objective goods that outcomes can embody. Classic utilitarianism, for instance, holds that pleasure (happiness) is the only intrinsic good. In this view the world has a measurable property – total happiness or welfare – which grounds right action. Consequentialists thus assume the world contains countable values (e.g., units of well-being) that can be summed or compared. Agents and actions have no value apart from their effects on these objective goods.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Sources:</strong> 
+                        <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">Consequentialism (Stanford Encyclopedia)</a> | 
+                        <a href="https://iep.utm.edu/consequentialism-utilitarianism/" target="_blank" rel="noopener">Consequentialism and Utilitarianism (IEP)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEONTOLOGICAL VIEW -->
+            <div class="view" id="deontological" role="region" aria-labelledby="deontological-title">
+                <div class="framework-card deontological">
+                    <h2 id="deontological-title">📜 Deontological Ethics</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Deontological frameworks (especially Kantian) posit that agents are <strong>autonomous rational legislators</strong>. Humans are viewed as ends-in-themselves whose rational will can discern universal laws. Kant, for example, assumes a "kingdom of rational agents" bound by reason. Agency here means acting from duty, not inclination: an agent's own rational capacity generates the binding moral law. Emotional impulses or contingent motivations are subordinated to duty.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Moral knowledge is <strong>a priori</strong>: it is discovered by reason itself. In Kantian terms, we know our duties by applying the Categorical Imperative, a test of universalizability, through pure reason. There is no reliance on empirical consequences or social conventions. One deduces obligations from rational consistency or respect for persons. Knowledge of right action comes from rational reflection on principles, not from sensory observation or tradition.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p>Deontology assumes <strong>objective moral laws and rights exist independently</strong> of human opinion or benefit. These duties are metaphysically grounded (in some accounts by the fact that all rational wills must legislate the same laws). Values such as justice, dignity, and autonomy are treated as metaphysically real. The nature of the self is that of a free rational agent with intrinsic worth. This view presumes a robust moral realism: ethical facts (e.g., "one must not lie") are taken as universally binding, not reducible to psychology or culture.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Source:</strong> <a href="https://sevenpillarsinstitute-org.sevenpillarsconsulting.com/glossary/rationality/" target="_blank" rel="noopener">Rationality - Seven Pillars Institute</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARE ETHICS VIEW -->
+            <div class="view" id="care" role="region" aria-labelledby="care-title">
+                <div class="framework-card care">
+                    <h2 id="care-title">🤝 Care Ethics</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Care ethics starts from the premise that humans are <strong>relational and vulnerable</strong>. Agents are seen as embedded in networks of dependency and care. Unlike theories built on abstract autonomy, care theorists assume people are motivated by empathy and concern for others. The moral agent is one who recognizes and responds to the needs of dependents; caring feelings and emotions (love, compassion) are central. Autonomy is de-emphasized in favor of interdependence.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Care ethics bases moral knowledge in <strong>contextual, empathetic understanding</strong>. Knowing what to do comes from listening to concrete voices and relationships rather than applying impartial rules. It emphasizes narratives and particular situations: one learns how to care by cultivating sensitivity to others' needs. Thus reasoning is less deductive and more narrative or "story-like." There is no single calculable metric; moral insight is grasped through embodied experience and responsiveness.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p>Care theory implies a <strong>relational ontology</strong>. The self is not an isolated atom but fundamentally connected to others. Identities and values arise within the web of relationships and social roles. Care ethics generally rejects atomistic individualism and universalism: moral value is grounded in specific relationships (parent-child, friend, community). It does not posit abstract universal values, but views moral obligations as flowing from the facts of dependency and the importance of caring connections.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Source:</strong> <a href="https://iep.utm.edu/care-ethics/" target="_blank" rel="noopener">Care Ethics | Internet Encyclopedia of Philosophy</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOCIAL CONTRACT VIEW -->
+            <div class="view" id="contract" role="region" aria-labelledby="contract-title">
+                <div class="framework-card contract">
+                    <h2 id="contract-title">🤜🤛 Social Contract Theory</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Social contract views assume individuals are <strong>rational, self-interested (or impartial) agents</strong> who enter agreements. Early contractarians (Hobbes) depict humans in a state of nature as self-interested and rationally seeking self-preservation. Later versions (Rawls) assume agents are equally rational and impartial behind a veil of ignorance. In all cases, agency is modeled on bargaining and consent: agents can understand the game and form mutual agreements. Emotional or non-rational motivations are backgrounded in favor of reasoned cooperation.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Morality is known via <strong>hypothetical agreement and rational deliberation</strong>. Agents derive principles by imagining fair bargaining situations (e.g., Rawls' original position) or consenting to basic rules that serve all. This is a kind of constructivism or contractualism: moral norms are justified to the extent that all rational agents would agree to them under specified conditions. Knowledge is thus reached through reflective reasoning about fairness and mutual advantage, not through divine command or sentiment.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p>Contract theory typically treats moral values as <strong>derivative of mutual consent</strong> rather than metaphysically given. The content of morality depends on the form of the agreement. For example, Rawls' principles of justice are "chosen" under fair conditions. Some contractarians allow a thin realism (the "right" can be defined as what free and equal agents would accept). In general, it denies transcendent moral facts; instead, moral obligations exist to the extent that rational agents endorse them. There is a basic realism about justice and mutual recognition, but only insofar as they are outcomes of the contract.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Source:</strong> <a href="https://iep.utm.edu/soc-cont/" target="_blank" rel="noopener">Social Contract Theory | Internet Encyclopedia of Philosophy</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COHERENCE ETHICS VIEW -->
+            <div class="view" id="coherence" role="region" aria-labelledby="coherence-title">
+                <div class="framework-card coherence">
+                    <h2 id="coherence-title">🌐 Coherence-Based Thermodynamic Ethics</h2>
+                    
+                    <div class="framework-section">
+                        <h3>Assumptions about Agency</h3>
+                        <p>Coherence Ethics conceives moral agency in <strong>thermodynamic/informational terms</strong>. An agent's capacity to act ethically is seen as an achievement of low-entropy coherence. It assumes human agents require a stable biological substrate, predictable institutions, coherent narratives, and a unified phenomenological horizon in order to function as deliberative beings. When these conditions degrade (e.g., under stress or social chaos), agency collapses. Thus agency is not simply rational volition; it depends on environmental and physiological factors that maintain identity and order. Emotion and cognition are important only insofar as they contribute to or erode this coherence.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Epistemology</h3>
+                        <p>Moral knowledge is treated <strong>functionally, not metaphysically</strong>. Coherence Ethics uses a kind of abductive, predictive inference: agents model what actions will preserve coherence. In this view, "normativity becomes a functional necessity, not a metaphysical postulate." Rather than invoking duty or utility, one asks "What preserves low-entropy stability of identity and relationships?" The framework provides algorithms (e.g., predictive salience, coherence-based inference) to identify such actions. Thus moral reasoning is akin to pattern recognition under uncertainty, aligning actions by their systemic effects.</p>
+                    </div>
+
+                    <div class="framework-section">
+                        <h3>Ontological Assumptions</h3>
+                        <p><strong>Critically, Coherence Ethics assumes NO shared ontology.</strong> It is explicitly ontology-light and pluralistic. Every agent interprets "coherence" and meaning through a personal Phenomenological Reference Frame (PRF) – which could be religious, secular, indigenous, scientific, etc. – and the theory makes no claim that any agent must adopt a common metaphysical view. The formal structure (e.g., "Coherent Information Bits" and Identity Kernel) is universal, but its interpretation is flexible. In practice, this means values are not fixed: a theist may think of coherence as spiritual integrity while a humanist thinks of it as resilience. Thus Coherence Ethics treats moral facts as relative to coherence-preserving functionality. It avoids realists' heavy commitments by treating normative coordination as a matter of functional equivalence – different reasons or worldviews can lead to the same coherence-enhancing actions.</p>
+                    </div>
+
+                    <div class="alert">
+                        <h3>Key Innovation</h3>
+                        <p>Under conditions of information scarcity or high "entropy," the ontology-light Coherence approach offers practical coordination: it aligns actions by their functional effect (stability, trust, identity coherence) rather than by contested reasons. Agents working from different PRFs can still achieve functional equivalence—for example, both a religious and a secular agent might build trust in their community—because the formalism does not depend on their personal rationales.</p>
+                    </div>
+
+                    <div class="citation">
+                        <strong>Source:</strong> Ethics in an Entropic World (internal document)
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARISON TABLE VIEW -->
+            <div class="view" id="comparison" role="region" aria-labelledby="comparison-title">
+                <h2 id="comparison-title">Comparative Summary Table</h2>
+                
+                <div class="alert">
+                    <h3>How to Read This Table</h3>
+                    <p>Each framework is analyzed across three dimensions: Agency (how they view moral actors), Epistemology (how we gain moral knowledge), and Ontology (what exists in moral reality).</p>
+                </div>
+
+                <table class="comparison-table" role="table" aria-label="Comparison of ethical frameworks">
+                    <thead>
+                        <tr>
+                            <th scope="col">Framework</th>
+                            <th scope="col">Agency (Assumptions)</th>
+                            <th scope="col">Epistemology</th>
+                            <th scope="col">Ontology</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="framework-name" style="color: var(--virtue);">Virtue Ethics</td>
+                            <td>Virtues (stable character traits) require rational and emotional development. Agents must reason well and habituate good dispositions.</td>
+                            <td>Moral knowledge via <em>phronesis</em>: learned through practice, exemplars, habituation. No fixed rulebook; context and character guide action.</td>
+                            <td>Assumes a realist <em>telos</em>: objective human flourishing exists (e.g., happiness through rational life). Values are grounded in human nature and virtues.</td>
+                        </tr>
+                        <tr>
+                            <td class="framework-name" style="color: var(--consequential);">Consequentialism</td>
+                            <td>Agents modeled as impartial utility-maximizers. Assumes high rationality: can predict and weigh outcomes. Emotions or partiality are secondary.</td>
+                            <td>Requires predicting and aggregating consequences. Knowledge via calculation of outcomes (e.g., total happiness). Actions judged by effects alone.</td>
+                            <td>Assumes objective measurable goods (pleasure, welfare, preferences) that are intrinsically valuable. Reality contains a quantifiable "Good" (e.g., total utility).</td>
+                        </tr>
+                        <tr>
+                            <td class="framework-name" style="color: var(--deontological);">Deontological Ethics</td>
+                            <td>Agents as autonomous rational legislators. Duty and rational will are primary. Virtues or desires matter little except insofar as they cohere with duty.</td>
+                            <td>Moral knowledge from pure reason: applying universal maxims (Categorical Imperative). Ethics is a priori, not empirical.</td>
+                            <td>Posits universal moral laws or rights (e.g., "do not lie") as real facts. Strong moral realism: value of duty and autonomy is metaphysically binding. The self is inherently dignified.</td>
+                        </tr>
+                        <tr>
+                            <td class="framework-name" style="color: var(--care);">Care Ethics</td>
+                            <td>Humans as relational, caring creatures. Emphasis on empathy, dependency and responsiveness. Autonomy is partial; interdependence is fundamental.</td>
+                            <td>Moral understanding through context and relationships. Knowledge arises by listening to the situation and caring motivation, not by abstract formulae.</td>
+                            <td>Relational ontology: values (care, empathy) emerge from networks of dependency. Rejects universalism; moral "truths" depend on relationships and contextual needs.</td>
+                        </tr>
+                        <tr>
+                            <td class="framework-name" style="color: var(--contract);">Social Contract Theory</td>
+                            <td>Rational, consent-giving individuals (either self-interested like Hobbes or equally rational like Rawls). Agents are free and capable of agreement.</td>
+                            <td>Norms derived from hypothetical agreements: reason about fair terms (e.g., original position). Knowledge comes from mutual endorsement under constraints of fairness.</td>
+                            <td>Morality is constructivist: values stem from what agents rationally agree to. It may treat these as "real" only insofar as they are the product of fair consent. No fixed intrinsic values outside the contract.</td>
+                        </tr>
+                        <tr>
+                            <td class="framework-name" style="color: var(--coherence);">Coherence (Thermodynamic)</td>
+                            <td>Agency requires low-entropy coherence: stable bodies, predictable environment, coherent identity. Agents are not idealized calculators; they need narrative and thermodynamic resources.</td>
+                            <td>Functional and abductive: moral "knowledge" is predictive coherence. Decisions are made by inferring which actions preserve identity and stability. Normativity is treated as functional necessity (predictive salience, error-correction).</td>
+                            <td>Ontologically pluralistic and minimal: no one true worldview. Each agent has a personal PRF (religious, secular, etc.), and the theory's formalism is substrate-neutral. Values are instrumentally tied to coherence (e.g., trust, stability) rather than absolute.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RANKING VIEW -->
+            <div class="view" id="ranking" role="region" aria-labelledby="ranking-title">
+                <h2 id="ranking-title">Ranking by Assumption Depth</h2>
+                
+                <div class="alert">
+                    <h3>Understanding the Ranking</h3>
+                    <p>Frameworks are ranked from <strong>most minimal</strong> (fewest metaphysical/epistemological assumptions) to <strong>most demanding</strong> (requires accepting many contested claims about reality, reason, and values).</p>
+                </div>
+
+                <div class="ranking-container">
+                    <div class="ranking-item rank-1" data-rank="1">
+                        <h3>🌐 Coherence-Based Thermodynamic Ethics</h3>
+                        <p><span class="badge minimal">Minimal Commitments</span></p>
+                        <p>Explicitly ontology-neutral; it imposes only a formal coherence constraint, not any substantive worldview. It relies on agents' own PRFs (Phenomenological Reference Frames) and aligns actions by functional effect. Different metaphysical beliefs can lead to the same coherence-preserving actions.</p>
+                    </div>
+
+                    <div class="ranking-item rank-2" data-rank="2">
+                        <h3>🤝 Care Ethics</h3>
+                        <p><span class="badge light">Light Commitments</span></p>
+                        <p>Avoids grand metaphysical postulates, focusing on concrete human relations and emotions. Its assumptions about caring motivation and vulnerability are considered uncontroversial and context-dependent. No need for abstract universal values.</p>
+                    </div>
+
+                    <div class="ranking-item rank-3" data-rank="3">
+                        <h3>🤜🤛 Social Contract Theory</h3>
+                        <p><span class="badge moderate">Moderate Commitments</span></p>
+                        <p>Assumes idealized rational agents and often a background notion of justice or mutual advantage. These are abstract but still relatively defeasible (e.g., critics point out limitations on who is included). Constructivist rather than realist about values.</p>
+                    </div>
+
+                    <div class="ranking-item rank-4" data-rank="4">
+                        <h3>🏛️ Virtue Ethics</h3>
+                        <p><span class="badge strong">Stronger Commitments</span></p>
+                        <p>Posits an objective human good (flourishing) and assumes certain human functions (like rationality). While less rigid than formal laws, it still requires realism about human nature and character. Assumes there is a teleological end for humans.</p>
+                    </div>
+
+                    <div class="ranking-item rank-5" data-rank="5">
+                        <h3>⚖️ Consequentialism</h3>
+                        <p><span class="badge high">High Commitments</span></p>
+                        <p>Presumes a measurable, aggregable value (e.g., total happiness) and that agents can compute outcomes. This demand for an objective utility scale and far-reaching calculation is metaphysically and epistemologically heavy. Requires strong rationality assumptions.</p>
+                    </div>
+
+                    <div class="ranking-item rank-6" data-rank="6">
+                        <h3>📜 Deontological Ethics</h3>
+                        <p><span class="badge demanding">Most Demanding</span></p>
+                        <p>Requires a robust rationalist ontology: universal, a priori moral laws (such as Kant's Categorical Imperative) that bind all agents. It presumes idealized reasoners and neglects empirical variance, making very deep claims about human nature and moral reality. Most metaphysically ambitious.</p>
+                    </div>
+                </div>
+
+                <div class="alert">
+                    <h3>Practical Implications</h3>
+                    <p>Under conditions of information scarcity or high "entropy," the ontology-light Coherence approach offers practical coordination: it aligns actions by their functional effect (stability, trust, identity coherence) rather than by contested reasons. Agents working from different PRFs can still achieve functional equivalence because the formalism does not depend on their personal rationales.</p>
+                    <p><strong>In contrast,</strong> frameworks with heavier assumptions (like deontology or consequentialism) may fail when agents disagree on fundamental metaphysical or rational principles, making coordination more difficult in diverse or high-stress environments.</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const views = document.querySelectorAll('.view');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const viewId = button.dataset.view;
+                
+                // Update buttons
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                button.classList.add('active');
+                button.setAttribute('aria-pressed', 'true');
+                
+                // Update views
+                views.forEach(view => {
+                    view.classList.remove('active');
+                });
+                document.getElementById(viewId).classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Announce change to screen readers
+                const viewName = button.textContent;
+                announceToScreenReader(`Showing ${viewName}`);
+            });
+        });
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            let found = false;
+            
+            // Search through all content
+            views.forEach(view => {
+                const content = view.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    // Activate this view
+                    views.forEach(v => v.classList.remove('active'));
+                    view.classList.add('active');
+                    
+                    // Update nav buttons
+                    navButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                        if (btn.dataset.view === view.id) {
+                            btn.classList.add('active');
+                            btn.setAttribute('aria-pressed', 'true');
+                        }
+                    });
+                    
+                    // Highlight search term (simple version)
+                    highlightSearchTerm(view, searchTerm);
+                    
+                    found = true;
+                    announceToScreenReader(`Found "${searchTerm}" in ${view.id}`);
+                    return;
+                }
+            });
+            
+            if (!found) {
+                alert(`No results found for "${searchTerm}"`);
+            }
+        }
+
+        // Enable search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Highlight search term (basic implementation)
+        function highlightSearchTerm(view, term) {
+            // Remove previous highlights
+            view.querySelectorAll('.highlight').forEach(el => {
+                el.outerHTML = el.textContent;
+            });
+            
+            // Scroll to first occurrence
+            const firstMatch = view.textContent.toLowerCase().indexOf(term);
+            if (firstMatch !== -1) {
+                window.scrollTo({ 
+                    top: view.offsetTop, 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        // Screen reader announcements
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            setTimeout(() => announcement.remove(), 1000);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Alt + number for quick navigation
+            if (e.altKey && e.key >= '1' && e.key <= '9') {
+                const index = parseInt(e.key) - 1;
+                if (navButtons[index]) {
+                    navButtons[index].click();
+                }
+            }
+        });
+
+        // Print friendly
+        window.addEventListener('beforeprint', () => {
+            // Show all views when printing
+            views.forEach(view => {
+                view.style.display = 'block';
+            });
+        });
+
+        window.addEventListener('afterprint', () => {
+            // Restore view visibility
+            views.forEach(view => {
+                view.style.display = '';
+            });
+        });
+
+        // Initialize accessibility
+        document.addEventListener('DOMContentLoaded', () => {
+            announceToScreenReader('Ethical frameworks comparison loaded. Use navigation buttons to explore different frameworks.');
+        });
+    </script>
 </body>
 </html>
